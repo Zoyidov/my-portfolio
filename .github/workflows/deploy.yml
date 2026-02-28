@@ -10,7 +10,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -18,22 +17,16 @@ jobs:
         with:
           flutter-version: "3.41.2"
           channel: "stable"
-          cache: true
 
-      - name: Install dependencies
-        run: flutter pub get
+      - run: flutter pub get
 
-      # IMPORTANT: base-href repo nomiga mos bo‘lishi shart!
-      # Masalan repo: https://github.com/USER/dev_portfolio  => /dev_portfolio/
-      - name: Build web
-        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+      # ✅ repo nomi my-portfolio bo‘lgani uchun shu shart
+      - run: flutter build web --release --base-href "/my-portfolio/"
 
-      # SPA fallback (GoRouter refresh 404 bo‘lmasin)
-      - name: SPA fallback
-        run: cp build/web/index.html build/web/404.html
+      # ✅ refreshda route ishlashi uchun
+      - run: cp build/web/index.html build/web/404.html
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build/web
