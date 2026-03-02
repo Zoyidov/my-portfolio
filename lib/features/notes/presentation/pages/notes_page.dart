@@ -16,7 +16,8 @@ class NotesPage extends StatefulWidget {
   State<NotesPage> createState() => _NotesPageState();
 }
 
-class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMixin {
+class _NotesPageState extends State<NotesPage>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _c;
 
   String selectedFolder = 'All Notes';
@@ -77,9 +78,10 @@ class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    // ✅ Only once: page-entry animation
-    _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 950))
-      ..forward();
+    _c = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 950),
+    )..forward();
   }
 
   @override
@@ -135,7 +137,6 @@ class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMix
     return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
   }
 
-
   @override
   Widget build(BuildContext context) {
     final filtered = _filteredNotes;
@@ -152,7 +153,6 @@ class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMix
             child: const Text('Notes', style: AppText.h2),
           ),
           const SizedBox(height: 6),
-
           _StaggerIn(
             controller: _c,
             start: 0.06,
@@ -165,69 +165,79 @@ class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMix
           ),
           const SizedBox(height: 16),
 
+          // ✅ Responsive layout fix: mobile uses Column, desktop uses Row
           LayoutBuilder(builder: (context, c) {
             final twoCol = c.maxWidth >= 1100;
 
+            final left = Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _StaggerIn(
+                  controller: _c,
+                  start: 0.10,
+                  end: 0.40,
+                  from: InFrom.left,
+                  child: Text(
+                    'Organize your notes by folders, quickly find insights with search, and track your writing stats.',
+                    style: AppText.body.copyWith(color: AppColors.text3),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _StaggerIn(
+                  controller: _c,
+                  start: 0.16,
+                  end: 0.55,
+                  from: InFrom.left,
+                  child: _foldersCard(),
+                ),
+                const SizedBox(height: 12),
+                _StaggerIn(
+                  controller: _c,
+                  start: 0.22,
+                  end: 0.65,
+                  from: InFrom.left,
+                  child: _quickStatsCard(),
+                ),
+              ],
+            );
+
+            final right = Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _StaggerIn(
+                  controller: _c,
+                  start: 0.14,
+                  end: 0.45,
+                  from: InFrom.right,
+                  child: UiSearchInput(
+                    hint: 'Search notes, tags, or content...',
+                    onChanged: (v) => setState(() => q = v),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _notesGrid(filtered),
+              ],
+            );
+
+            if (!twoCol) {
+              // ✅ Mobile: stack vertically (fixes "UI not visible")
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  left,
+                  const SizedBox(height: 16),
+                  right,
+                ],
+              );
+            }
+
+            // ✅ Desktop: two columns
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: twoCol ? 320 : c.maxWidth,
-                  child: Column(
-                    children: [
-                      _StaggerIn(
-                        controller: _c,
-                        start: 0.10,
-                        end: 0.40,
-                        from: InFrom.left,
-                        child: Text(
-                          'Organize your notes by folders, quickly find insights with search, and track your writing stats.',
-                          style: AppText.body.copyWith(color: AppColors.text3),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      _StaggerIn(
-                        controller: _c,
-                        start: 0.16,
-                        end: 0.55,
-                        from: InFrom.left,
-                        child: _foldersCard(),
-                      ),
-                      const SizedBox(height: 12),
-
-                      _StaggerIn(
-                        controller: _c,
-                        start: 0.22,
-                        end: 0.65,
-                        from: InFrom.left,
-                        child: _quickStatsCard(),
-                      ),
-                    ],
-                  ),
-                ),
-                if (twoCol) const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    children: [
-                      _StaggerIn(
-                        controller: _c,
-                        start: 0.14,
-                        end: 0.45,
-                        from: InFrom.right,
-                        child: UiSearchInput(
-                          hint: 'Search notes, tags, or content...',
-                          onChanged: (v) => setState(() => q = v),
-                          // ✅ NO replay => no full re-animation
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // ✅ Only grid changes softly; page doesn't re-animate
-                      _notesGrid(filtered),
-                    ],
-                  ),
-                )
+                SizedBox(width: 320, child: left),
+                const SizedBox(width: 16),
+                Expanded(child: right),
               ],
             );
           }),
@@ -254,14 +264,12 @@ class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMix
           const Text('Folders', style: AppText.h3),
         ]),
         const SizedBox(height: 12),
-
         for (final f in _folders)
           _folderItem(
             f,
             counts[f] ?? 0,
             selected: selectedFolder == f,
             onTap: () => setState(() => selectedFolder = f),
-            // ✅ NO replay => no full re-animation
           ),
       ]),
     );
@@ -282,7 +290,9 @@ class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMix
         decoration: BoxDecoration(
           color: selected ? AppColors.primary.withOpacity(0.18) : AppColors.card2,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: selected ? AppColors.primary.withOpacity(0.35) : AppColors.stroke),
+          border: Border.all(
+            color: selected ? AppColors.primary.withOpacity(0.35) : AppColors.stroke,
+          ),
         ),
         child: Row(
           children: [
@@ -322,8 +332,6 @@ class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMix
           const Text('Quick Stats', style: AppText.h3),
         ]),
         const SizedBox(height: 14),
-
-        // ✅ These animate only on first entry (page animation). Not replayed on filter/search.
         _kvAnimated('Total Notes', totalNotes, start: 0.30, end: 0.90),
         _kvAnimated('Total Words', totalWords, start: 0.34, end: 0.95),
         _kvAnimated('This Month', thisMonth, start: 0.38, end: 1.00),
@@ -378,7 +386,6 @@ class _NotesPageState extends State<NotesPage> with SingleTickerProviderStateMix
             childAspectRatio: ratio,
           ),
           itemBuilder: (_, i) {
-            // ✅ No stagger replay here; page already animated once
             return _NoteCard(
               note: notes[i],
               timeText: _timeAgo(notes[i].createdAt),
@@ -406,39 +413,42 @@ class _NoteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return UiCard(
       padding: const EdgeInsets.all(18),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(
-          children: [
-            const Icon(Icons.description_outlined, color: AppColors.primary, size: 18),
-            const SizedBox(width: 8),
-            UiChip(note.folder),
-            const Spacer(),
-            const Icon(Icons.more_horiz, color: AppColors.text3),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(note.title, style: AppText.h3),
-        const SizedBox(height: 10),
-        Text(
-          note.body,
-          maxLines: 4,
-          overflow: TextOverflow.ellipsis,
-          style: AppText.body2.copyWith(color: AppColors.text3),
-        ),
-        const SizedBox(height: 12),
-        Wrap(spacing: 8, runSpacing: 8, children: [for (final t in note.tags) UiChip(t)]),
-        const Spacer(),
-        const Divider(height: 22),
-        Row(
-          children: [
-            Icon(Icons.schedule, size: 14, color: AppColors.text3),
-            const SizedBox(width: 6),
-            Text(timeText, style: AppText.caption.copyWith(color: AppColors.text3)),
-            const Spacer(),
-            Text(wordsText, style: AppText.caption.copyWith(color: AppColors.text3)),
-          ],
-        )
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.description_outlined, color: AppColors.primary, size: 18),
+              const SizedBox(width: 8),
+              UiChip(note.folder),
+              const Spacer(),
+              const Icon(Icons.more_horiz, color: AppColors.text3),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(note.title, style: AppText.h3),
+          const SizedBox(height: 10),
+          Text(
+            note.body,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: AppText.body2.copyWith(color: AppColors.text3),
+          ),
+          const SizedBox(height: 12),
+          Wrap(spacing: 8, runSpacing: 8, children: [for (final t in note.tags) UiChip(t)]),
+          const Spacer(),
+          const Divider(height: 22),
+          Row(
+            children: [
+              Icon(Icons.schedule, size: 14, color: AppColors.text3),
+              const SizedBox(width: 6),
+              Text(timeText, style: AppText.caption.copyWith(color: AppColors.text3)),
+              const Spacer(),
+              Text(wordsText, style: AppText.caption.copyWith(color: AppColors.text3)),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

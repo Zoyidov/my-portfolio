@@ -65,24 +65,11 @@ class _ProjectsPageState extends State<ProjectsPage>
       forks: 5,
       updated: '1 week ago',
     ),
-    // _Project(
-    //   title: 'E-Hisob',
-    //   status: 'Completed',
-    //   statusColor: AppColors.primary,
-    //   desc:
-    //   'Accounting app for small businesses: income and expenses, invoice/PDF and analytical reports.',
-    //   imageAsset: 'assets/images/ehisob.png',
-    //   tags: ['Flutter', 'SQLite', 'Cubit', 'PDF'],
-    //   stars: 42,
-    //   forks: 15,
-    //   updated: '2 months ago',
-    // ),
     _Project(
       title: 'Weather Pro',
       status: 'Completed',
       statusColor: AppColors.primary,
-      desc:
-      'Animated weather app: hourly/daily forecast and location-based updates.',
+      desc: 'Animated weather app: hourly/daily forecast and location-based updates.',
       imageAsset: 'assets/images/weather.png',
       tags: ['Flutter', 'REST API', 'BLoC'],
       stars: 31,
@@ -93,8 +80,7 @@ class _ProjectsPageState extends State<ProjectsPage>
       title: 'Teach Dart',
       status: 'Active',
       statusColor: AppColors.green,
-      desc:
-      'Dart language learning platform: lessons.',
+      desc: 'Dart language learning platform: lessons.',
       imageAsset: 'assets/images/teachdart.png',
       tags: ['Flutter', 'Hive', 'Quiz'],
       stars: 15,
@@ -105,8 +91,7 @@ class _ProjectsPageState extends State<ProjectsPage>
       title: 'Chateo',
       status: 'Active',
       statusColor: AppColors.green,
-      desc:
-      'Real-time chat app: group chat, media sharing, and private chat.',
+      desc: 'Real-time chat app: group chat, media sharing, and private chat.',
       imageAsset: 'assets/images/chateo.png',
       tags: ['Flutter', 'Firebase', 'WebSocket'],
       stars: 55,
@@ -115,9 +100,21 @@ class _ProjectsPageState extends State<ProjectsPage>
     ),
   ];
 
+  double _gridRatio(double maxWidth, int cols) {
+    // ✅ Make cards taller on small widths to prevent internal overflow
+    if (cols == 1) {
+      if (maxWidth < 360) return 0.78; // very small phones => tall cards
+      if (maxWidth < 420) return 0.85;
+      if (maxWidth < 520) return 0.95;
+      return 1.05;
+    }
+    // 2 columns: still keep enough height
+    if (maxWidth < 900) return 1.15;
+    return 1.35;
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: Responsive.pagePadding(context),
       child: ListView(
@@ -127,28 +124,53 @@ class _ProjectsPageState extends State<ProjectsPage>
 
           UiCard(
             padding: const EdgeInsets.all(14),
-            child: Row(
-              children: [
-                Expanded(
-                  child: UiSearchInput(
-                    hint: 'Search projects...',
-                    onChanged: (v) {
-                      setState(() => q = v.trim().toLowerCase());
-                      _replay();
-                    },
+            child: LayoutBuilder(
+              builder: (context, c) {
+                final w = c.maxWidth;
+                final isMobile = w < 620;
+
+                final search = UiSearchInput(
+                  hint: 'Search projects...',
+                  onChanged: (v) {
+                    setState(() => q = v.trim().toLowerCase());
+                    _replay();
+                  },
+                );
+
+                final chips = SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _filterChip('All'),
+                      const SizedBox(width: 8),
+                      _filterChip('Active'),
+                      const SizedBox(width: 8),
+                      _filterChip('Paused'),
+                      const SizedBox(width: 8),
+                      _filterChip('Completed'),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 12),
-                Wrap(
-                  spacing: 8,
+                );
+
+                if (isMobile) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      search,
+                      const SizedBox(height: 12),
+                      chips,
+                    ],
+                  );
+                }
+
+                return Row(
                   children: [
-                    _filterChip('All'),
-                    _filterChip('Active'),
-                    _filterChip('Paused'),
-                    _filterChip('Completed'),
+                    Expanded(child: search),
+                    const SizedBox(width: 12),
+                    Flexible(child: chips),
                   ],
-                ),
-              ],
+                );
+              },
             ),
           ),
           const SizedBox(height: 16),
@@ -164,6 +186,8 @@ class _ProjectsPageState extends State<ProjectsPage>
               return okFilter && okQ;
             }).toList();
 
+            final ratio = _gridRatio(c.maxWidth, cols);
+
             return GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -172,11 +196,10 @@ class _ProjectsPageState extends State<ProjectsPage>
                 crossAxisCount: cols,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: cols == 1 ? 1.0 : 1.45,
+                childAspectRatio: ratio,
               ),
               itemBuilder: (_, i) {
                 final from = i % 2 == 0 ? InFrom.left : InFrom.right;
-
                 return _StaggerIn(
                   controller: _c,
                   index: i,
@@ -213,81 +236,68 @@ class _ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, c) {
-        final w = c.maxWidth;
-
-        final imgH = (w < 420)
-            ? w * 0.58 // small mobile
-            : (w < 700)
-            ? w * 0.48 // mobile/tablet
-            : w * 0.40; // desktop
-
-        final height = imgH.clamp(150.0, 240.0);
-
-        return UiCard(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return UiCard(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Expanded(child: Text(p.title, style: AppText.h3)),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: p.statusColor.withOpacity(0.14),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      p.status,
-                      style: AppText.caption.copyWith(
-                        color: p.statusColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              Text(
-                p.desc,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: AppText.body2.copyWith(color: AppColors.text3),
-              ),
-              const SizedBox(height: 12),
-
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [for (final t in p.tags) UiChip(t)],
-              ),
-
-              const SizedBox(height: 12),
-
-              ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: Container(
-                  height: height,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.card,
-                    border: Border.all(color: AppColors.stroke.withOpacity(0.6)),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    p.imageAsset,
-                    fit: BoxFit.contain,
+              Expanded(child: Text(p.title, style: AppText.h3)),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: p.statusColor.withOpacity(0.14),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  p.status,
+                  style: AppText.caption.copyWith(
+                    color: p.statusColor,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ],
           ),
-        );
-      },
+          const SizedBox(height: 8),
+
+          Text(
+            p.desc,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: AppText.body2.copyWith(color: AppColors.text3),
+          ),
+          const SizedBox(height: 12),
+
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [for (final t in p.tags) UiChip(t)],
+          ),
+          const SizedBox(height: 12),
+
+          // ✅ Key fix: Image takes remaining space, no fixed min-height overflow
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.card,
+                  border: Border.all(color: AppColors.stroke.withOpacity(0.6)),
+                ),
+                padding: const EdgeInsets.all(10),
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Image.asset(p.imageAsset),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -347,15 +357,13 @@ class _StaggerIn extends StatelessWidget {
     final start = (index * 0.08).clamp(0.0, 0.6);
     final curve = CurvedAnimation(
       parent: controller,
-      curve: Interval(start.toDouble(), 1.0,
-          curve: Curves.easeOutCubic),
+      curve: Interval(start.toDouble(), 1.0, curve: Curves.easeOutCubic),
     );
 
     return FadeTransition(
       opacity: Tween<double>(begin: 0, end: 1).animate(curve),
       child: SlideTransition(
-        position:
-        Tween<Offset>(begin: _begin(), end: Offset.zero).animate(curve),
+        position: Tween<Offset>(begin: _begin(), end: Offset.zero).animate(curve),
         child: child,
       ),
     );
