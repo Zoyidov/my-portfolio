@@ -343,11 +343,17 @@ class _AboutPageState extends State<AboutPage> with SingleTickerProviderStateMix
     );
   }
 
-  double calculateExperience() {
+  int calculateExperience() {
     final startDate = DateTime(2023, 3);
     final now = DateTime.now();
 
-    final difference = now.difference(startDate);
-    return difference.inDays / 365;
+    int years = now.year - startDate.year;
+
+    if (now.month < startDate.month ||
+        (now.month == startDate.month && now.day < startDate.day)) {
+      years--;
+    }
+
+    return years;
   }
 }
