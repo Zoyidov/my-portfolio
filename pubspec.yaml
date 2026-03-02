@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   get_it: ^9.2.1
   go_router: ^17.1.0
@@ -20,6 +21,16 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/me.jpg"
+  adaptive_icon_background: "#0B1D29" # android adaptive icon
+  adaptive_icon_foreground: "assets/images/me.jpg"
 
 flutter:
   uses-material-design: true

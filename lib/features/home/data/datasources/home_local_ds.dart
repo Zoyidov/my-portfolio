@@ -9,6 +9,7 @@ class HomeLocalDataSourceImpl implements HomeLocalDataSource {
   Future<HomeOverview> getOverview() async {
     return const HomeOverview(
       name: 'Nurmuxammad',
+      lastName: "Zoyidov",
       title: 'Flutter Developer specializing in cross-platform mobile applications',
       location: 'Tashkent, Uzbekistan',
       timezone: 'UTC+5 (GMT+5)',

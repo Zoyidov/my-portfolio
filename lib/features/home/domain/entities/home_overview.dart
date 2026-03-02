@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class HomeOverview extends Equatable {
   final String name;
+  final String lastName;
   final String title;
   final String location;
   final String timezone;
@@ -20,6 +21,7 @@ class HomeOverview extends Equatable {
 
   const HomeOverview({
     required this.name,
+    required this.lastName,
     required this.title,
     required this.location,
     required this.timezone,

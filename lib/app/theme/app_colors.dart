@@ -13,6 +13,7 @@ class AppColors {
   static const text3 = Color(0x80EAF2FF);
 
   // Brand/Status tokens (Components page’da ko‘ringan)
+  static const white = Color(0xFFEAF2FF);
   static const primary = Color(0xFF00D9FF);
   static const purple  = Color(0xFF7B8BFA);
   static const green   = Color(0xFF34D399);

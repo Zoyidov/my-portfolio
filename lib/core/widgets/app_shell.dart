@@ -15,7 +15,7 @@ class AppShell extends StatelessWidget {
       return Scaffold(
         drawer: const Drawer(child: Sidebar(isDrawer: true)),
         appBar: AppBar(
-          title: const Text('Dasturchi haqqida ma\'lumot'),
+          title: const Text('Flutter Developer'),
           actions: const [SizedBox(width: 8)],
           scrolledUnderElevation: 0,
           elevation: 0,

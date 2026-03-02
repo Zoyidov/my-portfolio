@@ -55,7 +55,7 @@ class RecentActivity extends StatelessWidget {
             iconBg: AppColors.primary.withOpacity(0.10),
             icon: Icons.merge_type,
             title: 'Merged PR: Dark theme support',
-            sub: 'Praga Cafe App',
+            sub: 'Cafe App',
             time: '2 days ago',
           ),
         ],

@@ -18,6 +18,7 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   // ✅ Your real data (edit these)
   static const String telegramUsername = 'zoyidov_nurmuxammad'; // without @
+  static const String phone = '+998 91 271 95 55';
   static const String email = 'nurmuxammad_zoyidov@gmail.com';
   static const String location = 'Fergana, Uzbekistan';
   static const String timezone = 'UTC+5 (GMT+5)';
@@ -262,6 +263,8 @@ class _ContactPageState extends State<ContactPage> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text('Contact Information', style: AppText.h3),
         const SizedBox(height: 14),
+        tile(Icons.phone, 'Phone', phone, AppColors.white),
+        const SizedBox(height: 12),
         tile(Icons.mail_outline, 'Email', email, AppColors.primary),
         const SizedBox(height: 12),
         tile(Icons.location_on_outlined, 'Location', location, AppColors.green),

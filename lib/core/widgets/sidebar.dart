@@ -94,13 +94,13 @@ class _SidebarState extends State<Sidebar> {
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         children: [
-          _item(context, 'Home', Icons.home_outlined, '/home', loc),
-          _item(context, 'About', Icons.person_outline, '/about', loc),
+          _item(context, 'Home', Icons.home_filled, '/home', loc),
+          _item(context, 'About', Icons.person, '/about', loc),
           _item(context, 'Projects', Icons.folder_outlined, '/projects', loc),
-          _item(context, 'Work Status', Icons.work_outline, '/work-status', loc),
+          _item(context, 'Work Status', Icons.work, '/work-status', loc),
           _item(context, 'Tasks', Icons.checklist_outlined, '/tasks', loc),
-          _item(context, 'Notes', Icons.note_outlined, '/notes', loc),
-          _item(context, 'Contact', Icons.mail_outline, '/contact', loc),
+          _item(context, 'Notes', Icons.notes, '/notes', loc),
+          _item(context, 'Contact', Icons.contact_mail, '/contact', loc),
           const SizedBox(height: 10),
           _item(context, 'Components', Icons.code, '/components', loc),
         ],
