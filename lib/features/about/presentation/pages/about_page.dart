@@ -269,9 +269,9 @@ class _AboutPageState extends State<AboutPage> with SingleTickerProviderStateMix
         ]),
         const SizedBox(height: 16),
         _timeline(
-          title: 'Senior Flutter Developer',
+          title: 'Middle Flutter Developer',
           company: 'Tech Solutions Inc.',
-          range: '2024 - Present',
+          range: '2023 - Present',
           bullets: const [
             'Built 3 production apps with 50k+ downloads',
             'Reduced app load time by 40%',
@@ -287,6 +287,27 @@ class _AboutPageState extends State<AboutPage> with SingleTickerProviderStateMix
             'Delivered 8+ client projects',
             'Maintained 4.8+ rating on app stores',
             'Integrated payment gateways and third-party APIs',
+          ],
+        ),
+        const SizedBox(height: 18),
+        _timeline(
+          title: 'Programmer technician',
+          company: 'I Tech Group :ZimZim:',
+          range: '2025',
+          bullets: const [
+            'Learned Flutter and Dart fundamentals',
+            'Contributed to 5 team projects',
+          ],
+        ),
+        
+        const SizedBox(height: 18),
+        _timeline(
+          title: 'Technical support specialist',
+          company: 'Megawatt Energy',
+          range: '2022 - 2023',
+          bullets: const [
+            'Learned Flutter and Dart fundamentals',
+            'Contributed to 5 team projects',
           ],
         ),
         const SizedBox(height: 18),
