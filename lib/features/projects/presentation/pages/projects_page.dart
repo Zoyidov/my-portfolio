@@ -47,7 +47,7 @@ class _ProjectsPageState extends State<ProjectsPage>
       statusColor: AppColors.orange,
       desc:
       'Food ordering platform for the Chartak district of Namangan region: real-time tracking, booking and payment integration.',
-      imageAsset: 'assets/images/chortoqgo.png',
+      imageAsset: 'assets/images/logo.png',
       tags: ['Flutter', 'Supabase', 'BLoC', 'Maps', 'Payment'],
       stars: 24,
       forks: 8,
