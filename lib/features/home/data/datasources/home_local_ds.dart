@@ -11,16 +11,16 @@ class HomeLocalDataSourceImpl implements HomeLocalDataSource {
       name: 'Nurmuxammad',
       lastName: "Zoyidov",
       title: 'Flutter Developer specializing in cross-platform mobile applications',
-      location: 'Tashkent, Uzbekistan',
+      location: 'Fergana, Uzbekistan',
       timezone: 'UTC+5 (GMT+5)',
       currentFocus: 'ChortoqGo MVP',
       focusStatus: 'In Progress',
-      activeProjects: 3,
-      activeDelta: '+1 this month',
+      activeProjects: 6,
+      activeDelta: '+4 this month',
       availability: 'Busy',
-      availabilityNote: 'Until March 2026',
-      tasksDone: 24,
-      tasksTotal: 32,
+      availabilityNote: 'Until 2027',
+      tasksDone: 32,
+      tasksTotal: 48,
     );
   }
 }
