@@ -30,9 +30,9 @@ class RecentActivity extends StatelessWidget {
           _tile(
             iconBg: AppColors.primary.withOpacity(0.14),
             icon: Icons.cloud_upload_outlined,
-            title: 'Pushed 3 commits to ChortoqGo',
-            sub: 'Added authentication flow & user profile screen',
-            time: '2 hours ago',
+            title: 'Pushed 42 commits to ChortoqGo',
+            sub: 'Implemented Bloc-based state management and integrated a real API for the shop page.',
+            time: '2 days ago',
           ),
           const SizedBox(height: 12),
           _tile(
@@ -56,7 +56,7 @@ class RecentActivity extends StatelessWidget {
             icon: Icons.merge_type,
             title: 'Merged PR: Dark theme support',
             sub: 'Cafe App',
-            time: '2 days ago',
+            time: '2 months ago',
           ),
         ],
       ),
